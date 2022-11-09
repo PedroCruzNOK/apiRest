@@ -8,10 +8,16 @@ router.get('/', async (req, res) => {
   const bienes = await service.find();
   res.json(bienes);
 })
-router.get('/:id', async (req, res)=>{
-  const { id } = req.params;
-  const bien = await service.findOne(id);
-  res.json(bien);
+router.get('/:id', async (req, res, next)=>{
+  try{
+    const { id } = req.params;
+    const bien = await service.findOne(id);
+    res.json(bien);
+
+  } catch(error){
+    next(error);
+  }
+  
 })
 
 router.post('/',async (req, res)=> {
@@ -20,16 +26,14 @@ router.post('/',async (req, res)=> {
   res.status(201).json(newBien);
 });
 
-router.patch('/:id', async(req, res)=> {
+router.patch('/:id', async(req, res, next)=> {
   try{
     const { id } = req.params;
     const body = req.body;
     const bien = await service.update(id, body);
     res.json(bien);
   } catch (error){
-    res.status(404).json({
-      message: error.message
-    })
+    next(error);
   }
   
 });
