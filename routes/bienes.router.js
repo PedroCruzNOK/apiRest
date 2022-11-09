@@ -4,30 +4,34 @@ const BienesService = require('./../services/bienes.service');
 const router = express.Router();
 const service = new BienesService();
 
-router.get('/', (req, res) => {
-  const bienes = service.find();
+router.get('/', async (req, res) => {
+  const bienes = await service.find();
   res.json(bienes);
 })
-router.get('/:id', (req, res)=>{
+router.get('/:id', async (req, res)=>{
   const { id } = req.params;
-  const bien = service.findOne(id);
+  const bien = await service.findOne(id);
   res.json(bien);
 })
 
-router.post('/', (req, res)=> {
+router.post('/',async (req, res)=> {
   const body = req.body;
-  const newBien = service.create(body);
+  const newBien = await service.create(body);
   res.status(201).json(newBien);
 });
 
-router.patch('/:id', (req, res)=> {
-  const { id } = req.params;
-  const body = req.body;
-  res.json({
-    message: 'actualizado',
-    data: body,
-    id
-  });
+router.patch('/:id', async(req, res)=> {
+  try{
+    const { id } = req.params;
+    const body = req.body;
+    const bien = await service.update(id, body);
+    res.json(bien);
+  } catch (error){
+    res.status(404).json({
+      message: error.message
+    })
+  }
+  
 });
 
 router.put('/:id', (req, res)=> {
@@ -40,13 +44,17 @@ router.put('/:id', (req, res)=> {
   });
 });
 
-router.delete('/:id', (req, res)=> {
-  const { id } = req.params;
+router.delete('/:id', async (req, res)=> {
+  try {
+    const { id } = req.params;
+    const rta = await  service.delete(id);
+    res.json(rta);
+  } catch (error) {
+    res.status(404).json({
+      message: error.message
+    })
+  }
 
-  res.json({
-    message: 'eliminado',
-    id
-  });
 });
 
 module.exports = router;

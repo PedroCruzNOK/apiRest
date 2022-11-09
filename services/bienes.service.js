@@ -18,7 +18,7 @@ class BienesService {
     }
   }
 
-  create(data){
+  async create(data){
     const newBien = {
       id: faker.datatype.uuid(),
       ...data
@@ -27,19 +27,34 @@ class BienesService {
     return newBien;
   }
 
-  find(){
+  async find(){
     return this.bienes;
   }
 
-  findOne(id){
+  async findOne(id){
     return this.bienes.find(item => item.id === id);
   }
 
-  update(){
-
+  async update(id, changes){
+    const index = this.bienes.findIndex(item => item.id === id );
+    if(index ===-1){
+      throw new Error('bien no encontrado');
+    }
+    const bien = this.bienes[index];
+    this.bienes[index] = {
+      ...bien,
+      ...changes
+    };
+    return this.bienes[index];
   }
 
-  delete(){
+  async delete(id){
+    const index = this.bienes.findIndex(item => item.id === id );
+    if(index ===-1){
+      throw new Error('bien no encontrado');
+    }
+    this.bienes.splice(index, 1);
+    return { id };
 
   }
 }
