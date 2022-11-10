@@ -12,6 +12,7 @@ const createBienesSchema = joi.object({
 
 const updateBienesSchema = joi.object({
     articulo: articulo.required(),
+    descripcion: descripcion
     
 })
 

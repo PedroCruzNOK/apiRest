@@ -1,5 +1,8 @@
 const express = require('express');
 const BienesService = require('./../services/bienes.service');
+const  validatorHandler = require('./../midlewares/validator.handlre');
+const { createBienesSchema, updateBienesSchema } = require('./../schemas/bien.schema');
+
 
 const router = express.Router();
 const service = new BienesService();
@@ -8,6 +11,7 @@ router.get('/', async (req, res) => {
   const bienes = await service.find();
   res.json(bienes);
 })
+
 router.get('/:id', async (req, res, next)=>{
   try{
     const { id } = req.params;
@@ -16,25 +20,26 @@ router.get('/:id', async (req, res, next)=>{
 
   } catch(error){
     next(error);
-  }
-  
+  } 
 })
 
-router.post('/',async (req, res)=> {
-  const body = req.body;
-  const newBien = await service.create(body);
-  res.status(201).json(newBien);
+router.post('/', validatorHandler(createBienesSchema, 'body'),
+  async (req, res)=> {  
+    const body = req.body;
+    const newBien = await service.create(body);
+    res.status(201).json(newBien);
 });
 
-router.patch('/:id', async(req, res, next)=> {
-  try{
-    const { id } = req.params;
-    const body = req.body;
-    const bien = await service.update(id, body);
-    res.json(bien);
-  } catch (error){
-    next(error);
-  }
+router.patch('/:id',  validatorHandler(updateBienesSchema, 'body'),
+  async(req, res, next)=> {
+    try{
+      const { id } = req.params;
+      const body = req.body;
+      const bien = await service.update(id, body);
+      res.json(bien);
+    } catch (error){
+      next(error);
+    }
   
 });
 
