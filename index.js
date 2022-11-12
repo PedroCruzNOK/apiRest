@@ -4,7 +4,7 @@ const routerApi = require('./routes');
 
 const {logErrors, errorHandler, boomErrorHandler} = require('./midlewares/error.handler')
 const app = express();
-const port = 3000;
+const port = 5000;
 
 app.use(express.json());
 app.use(cors());
