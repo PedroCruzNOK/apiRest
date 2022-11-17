@@ -1,9 +1,11 @@
 const bienesRouter
  = require('./bienes.router');
-const usuariosRouter = require('./usuarios.router');
+const usersRouter = require('./users.router');
+
 function routerApi(app){
+  
   app.use('/bienes', bienesRouter);
-  app.use('/usuarios', usuariosRouter);
+  app.use('/users', usersRouter);
 }
 
 module.exports = routerApi
